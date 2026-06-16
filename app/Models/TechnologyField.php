@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['name', 'code', 'order'])]
 class TechnologyField extends Model
@@ -18,5 +19,10 @@ class TechnologyField extends Model
         return [
 
         ];
+    }
+
+    public function technologies(): HasMany
+    {
+        return $this->hasMany(Technology::class);
     }
 }
