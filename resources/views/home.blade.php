@@ -56,8 +56,6 @@
         </ul>
 
         <div class="nav__right">
-            <button class="nav__cta" @click="$dispatch('open-contact')">get in touch</button>
-
             <button
                 class="theme-toggle"
                 @click="dark = !dark"
@@ -96,7 +94,7 @@
 {{-- ── HERO ─────────────────────────────────────────── --}}
 <section id="about" class="section section--hero">
     @if ($profile)
-        <div style="width: 100%">
+        <div class="hero__inner">
             <p class="hero__eyebrow reveal">{{ $profile->job_title ?? 'Developer' }}</p>
 
             <h1 class="hero__name reveal" style="transition-delay: 0.1s">
@@ -107,23 +105,11 @@
                 <p class="hero__bio reveal" style="transition-delay: 0.2s">{{ $profile->bio }}</p>
             @endif
 
-            <div class="hero__actions reveal" style="transition-delay: 0.3s">
-                @if ($profile->cv_path)
+            @if ($profile->cv_path)
+                <div class="hero__actions reveal" style="transition-delay: 0.3s">
                     <a href="{{ route('cv.download') }}" class="btn btn--primary">↓ Resume</a>
-                @endif
-                @if ($profile->github_url)
-                    <a href="{{ $profile->github_url }}" target="_blank" rel="noopener noreferrer" class="btn btn--ghost">GitHub</a>
-                @endif
-                @if ($profile->linkedin_url)
-                    <a href="{{ $profile->linkedin_url }}" target="_blank" rel="noopener noreferrer" class="btn btn--ghost">LinkedIn</a>
-                @endif
-                @if ($profile->twitter_url)
-                    <a href="{{ $profile->twitter_url }}" target="_blank" rel="noopener noreferrer" class="btn btn--ghost">Twitter</a>
-                @endif
-                @if ($profile->email_public)
-                    <a href="mailto:{{ $profile->email_public }}" class="btn btn--ghost">Email</a>
-                @endif
-            </div>
+                </div>
+            @endif
 
             <div class="hero__meta reveal" x-data="clock()" style="transition-delay: 0.4s">
                 <div class="hero__meta-item">
@@ -273,9 +259,14 @@
 
     @if ($profile)
         <div class="reveal" style="transition-delay: 0.1s">
-            <p class="contact__text">
-                {{ $profile->tagline ?? "I'm always open to new opportunities and interesting projects. Feel free to reach out." }}
-            </p>
+            <div class="contact__header">
+                <p class="contact__text">
+                    {{ $profile->tagline ?? "I'm always open to new opportunities and interesting projects. Feel free to reach out." }}
+                </p>
+                <button class="btn btn--ghost contact__cta" @click="$dispatch('open-contact')">
+                    get in touch →
+                </button>
+            </div>
 
             <div class="contact__details">
                 @if ($profile->email_public)
@@ -317,9 +308,6 @@
                 @endif
             </div>
 
-            <button class="btn btn--ghost" @click="$dispatch('open-contact')">
-                get in touch →
-            </button>
         </div>
     @endif
 </section>

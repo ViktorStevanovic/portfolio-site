@@ -163,28 +163,6 @@ a:hover {
     flex-shrink: 0;
 }
 
-.nav__cta {
-    font-size: 0.75rem;
-    font-weight: 400;
-    color: var(--text);
-    border: 0.5px solid var(--border-strong);
-    padding: 0.4rem 1rem;
-    border-radius: 2rem;
-    letter-spacing: 0.02em;
-    background: none;
-    cursor: pointer;
-    transition: background 0.2s, opacity 0.2s;
-    font-family: 'DM Sans', system-ui, sans-serif;
-}
-
-.nav__cta:hover {
-    background: rgba(0, 0, 0, 0.04);
-    opacity: 1;
-}
-
-.dark .nav__cta:hover {
-    background: rgba(255, 255, 255, 0.06);
-}
 
 .theme-toggle {
     width: 30px;
@@ -274,9 +252,18 @@ a:hover {
 .section--hero {
     display: flex;
     align-items: center;
+    justify-content: center;
     padding-top: calc(var(--nav-h) + 3rem);
     padding-bottom: 4rem;
     min-height: 100svh;
+}
+
+.hero__inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .hero__eyebrow {
@@ -321,7 +308,6 @@ a:hover {
     font-weight: 300;
     line-height: 1.85;
     color: var(--text-dim);
-    max-width: 460px;
     margin-bottom: 2.5rem;
     letter-spacing: 0.005em;
 }
@@ -329,6 +315,7 @@ a:hover {
 .hero__actions {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     flex-wrap: wrap;
     margin-bottom: 2.75rem;
@@ -379,9 +366,11 @@ a:hover {
 .hero__meta {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.875rem;
     padding-top: 2rem;
     border-top: 0.5px solid var(--border);
+    width: 100%;
 }
 
 .hero__meta-item {
@@ -688,13 +677,26 @@ a:hover {
 
 /* ── CONTACT ─────────────────────────────────────── */
 
+.contact__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.contact__cta {
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+}
+
 .contact__text {
     font-size: 1.05rem;
     font-weight: 300;
     line-height: 1.9;
     color: var(--text-dim);
     max-width: 500px;
-    margin-bottom: 2.5rem;
+    margin-bottom: 0;
     letter-spacing: 0.005em;
 }
 
@@ -1072,6 +1074,11 @@ a:hover {
 
     .projects-grid {
         grid-template-columns: 1fr;
+    }
+
+    .contact__header {
+        flex-direction: column;
+        gap: 1.25rem;
     }
 
     .form-row {
