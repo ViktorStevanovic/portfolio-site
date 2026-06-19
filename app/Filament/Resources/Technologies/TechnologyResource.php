@@ -19,9 +19,9 @@ class TechnologyResource extends Resource
 {
     protected static ?string $model = Technology::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCpuChip;
 
-    protected static string | UnitEnum | null $navigationGroup = 'Configurations';
+    protected static string|UnitEnum|null $navigationGroup = 'Configurations';
 
     protected static ?string $recordTitleAttribute = 'name';
 

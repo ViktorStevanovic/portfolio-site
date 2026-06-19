@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Profiles\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -16,24 +15,26 @@ class ProfilesTable
         return $table
             ->columns([
                 TextColumn::make('job_title')
-                    ->searchable(),
-                TextColumn::make('tagline')
-                    ->searchable(),
-                TextColumn::make('photo')
-                    ->searchable(),
-                TextColumn::make('cv_path')
-                    ->searchable(),
-                TextColumn::make('cv_downloads')
-                    ->numeric()
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('github_url')
-                    ->searchable(),
-                TextColumn::make('linkedin_url')
-                    ->searchable(),
+                TextColumn::make('tagline')
+                    ->searchable()
+                    ->limit(60)
+                    ->toggleable(),
                 TextColumn::make('email_public')
+                    ->label('Email')
                     ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
+                TextColumn::make('github_url')
+                    ->label('GitHub')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('linkedin_url')
+                    ->label('LinkedIn')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('cv_downloads')
+                    ->label('CV Downloads')
+                    ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
@@ -45,7 +46,6 @@ class ProfilesTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

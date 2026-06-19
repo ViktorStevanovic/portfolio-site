@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Experiences\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -16,23 +15,24 @@ class ExperiencesTable
     {
         return $table
             ->columns([
+                TextColumn::make('company.name')
+                    ->label('Company')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('role')
                     ->searchable(),
                 TextColumn::make('start_date')
-                    ->date()
+                    ->date('M Y')
                     ->sortable(),
                 TextColumn::make('end_date')
-                    ->date()
-                    ->sortable(),
+                    ->date('M Y')
+                    ->sortable()
+                    ->placeholder('Present'),
+                IconColumn::make('is_visible')
+                    ->label('Visible')
+                    ->boolean(),
                 TextColumn::make('order')
                     ->numeric()
-                    ->sortable(),
-                IconColumn::make('is_visible')
-                    ->boolean(),
-                TextColumn::make('company.name')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
@@ -40,11 +40,11 @@ class ExperiencesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('order')
             ->filters([
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

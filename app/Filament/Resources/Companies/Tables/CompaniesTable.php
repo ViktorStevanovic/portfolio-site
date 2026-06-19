@@ -5,7 +5,7 @@ namespace App\Filament\Resources\Companies\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -15,17 +15,19 @@ class CompaniesTable
     {
         return $table
             ->columns([
+                ImageColumn::make('logo')
+                    ->disk('public')
+                    ->circular(),
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('address')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('website')
-                    ->searchable(),
-                TextColumn::make('logo')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->searchable()
+                    ->url(fn (?string $state): ?string => $state)
+                    ->openUrlInNewTab()
+                    ->toggleable(),
+                TextColumn::make('address')
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->dateTime()
@@ -36,7 +38,6 @@ class CompaniesTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

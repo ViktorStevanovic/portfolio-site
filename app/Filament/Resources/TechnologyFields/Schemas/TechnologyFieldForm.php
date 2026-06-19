@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\TechnologyFields\Schemas;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class TechnologyFieldForm
@@ -11,14 +12,19 @@ class TechnologyFieldForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('code')
-                    ->required(),
-                TextInput::make('order')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
+                Section::make()
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('name')
+                            ->required(),
+                        TextInput::make('code')
+                            ->required(),
+                        TextInput::make('order')
+                            ->label('Display Order')
+                            ->required()
+                            ->numeric()
+                            ->default(0),
+                    ]),
             ]);
     }
 }

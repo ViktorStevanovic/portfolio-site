@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Projects\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -17,22 +16,27 @@ class ProjectsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('code')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
-                    ->badge(),
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'in_progress' => 'warning',
+                        'completed' => 'success',
+                        'archived' => 'gray',
+                        default => 'gray',
+                    }),
                 TextColumn::make('short_description')
-                    ->searchable(),
-                TextColumn::make('repository_url')
-                    ->searchable(),
+                    ->limit(60)
+                    ->toggleable(),
+                IconColumn::make('is_visible')
+                    ->label('Visible')
+                    ->boolean(),
                 TextColumn::make('order')
                     ->numeric()
-                    ->sortable(),
-                IconColumn::make('is_visible')
-                    ->boolean(),
-                TextColumn::make('created_at')
-                    ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
@@ -40,11 +44,11 @@ class ProjectsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('order')
             ->filters([
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
