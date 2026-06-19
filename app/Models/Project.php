@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable('name', 'code', 'short_description', 'description', 'status', 'repository_url', 'order', 'is_visible')]
+#[Fillable('name', 'code', 'short_description', 'description', 'status', 'repository_url', 'demo_url', 'order', 'is_visible', 'is_featured')]
 class Project extends Model
 {
     /**

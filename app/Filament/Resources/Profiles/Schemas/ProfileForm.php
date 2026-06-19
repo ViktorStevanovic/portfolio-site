@@ -44,6 +44,12 @@ class ProfileForm
                             ->label('Public Email')
                             ->email()
                             ->required(),
+                        TextInput::make('twitter_url')
+                            ->label('Twitter / X URL')
+                            ->url(),
+                        TextInput::make('website_url')
+                            ->label('Website URL')
+                            ->url(),
                     ]),
 
                 Section::make('Media')

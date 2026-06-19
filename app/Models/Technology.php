@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-#[Fillable(['name', 'code', 'icon', 'order', 'technology_field_id'])]
+#[Fillable(['name', 'code', 'icon', 'proficiency', 'order', 'technology_field_id'])]
 class Technology extends Model
 {
     /**
@@ -30,7 +30,7 @@ class Technology extends Model
     {
         return $this->belongsToMany(Experience::class);
     }
-    
+
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class);

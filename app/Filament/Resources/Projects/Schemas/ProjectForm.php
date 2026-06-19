@@ -51,6 +51,10 @@ class ProjectForm
                             ->label('Repository URL')
                             ->url()
                             ->columnSpanFull(),
+                        TextInput::make('demo_url')
+                            ->label('Demo URL')
+                            ->url()
+                            ->columnSpanFull(),
                         Select::make('technologies')
                             ->relationship('technologies', 'name')
                             ->multiple()
@@ -66,6 +70,10 @@ class ProjectForm
                             ->label('Visible on portfolio')
                             ->inline(false)
                             ->default(true),
+                        Toggle::make('is_featured')
+                            ->label('Featured on homepage')
+                            ->inline(false)
+                            ->default(false),
                     ]),
 
                 Section::make('Gallery')

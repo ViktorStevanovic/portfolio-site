@@ -31,6 +31,11 @@ class TechnologyForm
                             ->required()
                             ->numeric()
                             ->default(0),
+                        TextInput::make('proficiency')
+                            ->label('Proficiency (1-100)')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(100),
                         TextInput::make('icon')
                             ->helperText('Icon class name (e.g. devicon:laravel)')
                             ->columnSpanFull(),

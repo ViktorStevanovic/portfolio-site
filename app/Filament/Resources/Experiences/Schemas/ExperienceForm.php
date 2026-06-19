@@ -27,6 +27,14 @@ class ExperienceForm
                             ->relationship('company', 'name')
                             ->searchable()
                             ->preload(),
+                        Select::make('type')
+                            ->options([
+                                'full_time' => 'Full Time',
+                                'freelance' => 'Freelance',
+                                'contract' => 'Contract',
+                                'internship' => 'Internship',
+                            ])
+                            ->native(false),
                         TextInput::make('order')
                             ->label('Display Order')
                             ->required()

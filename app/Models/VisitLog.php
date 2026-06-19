@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 #[Fillable('route', 'method', 'ip', 'user_agent', 'referrer', 'created_at')]
 class VisitLog extends Model
 {
+    const UPDATED_AT = null;
+
     /**
      * Get the attributes that should be cast.
      *
@@ -16,7 +18,7 @@ class VisitLog extends Model
     public function casts()
     {
         return [
-            'created_at' => 'datetime'
+            'created_at' => 'datetime',
         ];
     }
 }

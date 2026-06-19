@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-#[Fillable('company_id', 'role', 'description', 'start_date', 'end_date', 'order', 'is_visible')]
+#[Fillable('company_id', 'role', 'type', 'description', 'start_date', 'end_date', 'order', 'is_visible')]
 class Experience extends Model
 {
     /**
