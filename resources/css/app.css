@@ -542,20 +542,6 @@ a:hover {
     white-space: nowrap;
 }
 
-.tag-0 { color: #c97a2f; border-color: rgba(201, 122, 47, 0.3); background: rgba(201, 122, 47, 0.04); }
-.tag-1 { color: #4caf7d; border-color: rgba(76, 175, 125, 0.3); background: rgba(76, 175, 125, 0.04); }
-.tag-2 { color: #2f8fc9; border-color: rgba(47, 143, 201, 0.3); background: rgba(47, 143, 201, 0.04); }
-.tag-3 { color: #8b6fc9; border-color: rgba(139, 111, 201, 0.3); background: rgba(139, 111, 201, 0.04); }
-.tag-4 { color: #c96ea0; border-color: rgba(201, 110, 160, 0.3); background: rgba(201, 110, 160, 0.04); }
-.tag-5 { color: #2fa0a0; border-color: rgba(47, 160, 160, 0.3); background: rgba(47, 160, 160, 0.04); }
-
-.dark .tag-0 { color: #e8934a; border-color: rgba(232, 147, 74, 0.25); background: rgba(232, 147, 74, 0.05); }
-.dark .tag-1 { color: #5dc98e; border-color: rgba(93, 201, 142, 0.25); background: rgba(93, 201, 142, 0.05); }
-.dark .tag-2 { color: #4aaee0; border-color: rgba(74, 174, 224, 0.25); background: rgba(74, 174, 224, 0.05); }
-.dark .tag-3 { color: #a48be0; border-color: rgba(164, 139, 224, 0.25); background: rgba(164, 139, 224, 0.05); }
-.dark .tag-4 { color: #e08ab8; border-color: rgba(224, 138, 184, 0.25); background: rgba(224, 138, 184, 0.05); }
-.dark .tag-5 { color: #40bfbf; border-color: rgba(64, 191, 191, 0.25); background: rgba(64, 191, 191, 0.05); }
-
 /* ── PROJECT CARDS ───────────────────────────────── */
 
 .projects-grid {
@@ -986,6 +972,68 @@ a:hover {
     font-size: 0.83rem;
     font-weight: 300;
     color: var(--text-dim);
+}
+
+/* ── MAINTENANCE ─────────────────────────────────── */
+
+.maintenance {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+.maintenance__eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+}
+
+.maintenance__heading {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 2rem;
+}
+
+.maintenance__heading em {
+    display: block;
+    font-style: italic;
+    color: var(--text-mid);
+}
+
+.maintenance__message {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-dim);
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+}
+
+.maintenance__meta {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--text-dim);
+}
+
+.maintenance__meta a {
+    color: var(--text);
+    border-bottom: 0.5px solid var(--border-mid);
+    padding-bottom: 0.05rem;
+    transition: opacity 0.2s;
+}
+
+.maintenance__meta a:hover {
+    opacity: 0.65;
 }
 
 /* ── RESPONSIVE ──────────────────────────────────── */

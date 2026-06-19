@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Profiles\Schemas;
 
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -66,19 +65,6 @@ class ProfileForm
                             ->directory('profile/cv'),
                     ]),
 
-                Section::make('Account')
-                    ->columns(2)
-                    ->schema([
-                        Select::make('user_id')
-                            ->label('User')
-                            ->relationship('user', 'name')
-                            ->required(),
-                        TextInput::make('cv_downloads')
-                            ->label('CV Downloads')
-                            ->numeric()
-                            ->disabled()
-                            ->dehydrated(false),
-                    ]),
             ]);
     }
 }

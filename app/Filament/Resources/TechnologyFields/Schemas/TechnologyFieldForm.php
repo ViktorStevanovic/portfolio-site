@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TechnologyFields\Schemas;
 
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -19,6 +20,9 @@ class TechnologyFieldForm
                             ->required(),
                         TextInput::make('code')
                             ->required(),
+                        ColorPicker::make('color')
+                            ->hexColor()
+                            ->default('#6b7280'),
                         TextInput::make('order')
                             ->label('Display Order')
                             ->required()

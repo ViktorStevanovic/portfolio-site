@@ -13,13 +13,13 @@ class HomeController extends Controller
     {
         $profile = Profile::with('user')->first();
 
-        $experiences = Experience::with(['company', 'technologies'])
+        $experiences = Experience::with(['company', 'technologies.technologyField'])
             ->where('is_visible', true)
             ->orderByRaw('CASE WHEN end_date IS NULL THEN 0 ELSE 1 END')
             ->orderBy('start_date', 'desc')
             ->get();
 
-        $projects = Project::with(['technologies', 'images'])
+        $projects = Project::with(['technologies.technologyField', 'images'])
             ->where('is_visible', true)
             ->orderBy('order')
             ->get();

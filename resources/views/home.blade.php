@@ -10,7 +10,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @if ($profile)
-        <title>{{ $profile->user?->name ?? config('app.name') }}</title>
+        <title>{{ config('app.name') }}</title>
         <meta name="description" content="{{ $profile->tagline ?? Str::limit($profile->bio, 160) }}">
     @else
         <title>{{ config('app.name') }}</title>
@@ -22,7 +22,10 @@
 <body>
 
 @php
-    $tagColor = fn(string $name): string => ['tag-0','tag-1','tag-2','tag-3','tag-4','tag-5'][abs(crc32($name)) % 6];
+    $tagStyle = function (\App\Models\Technology $tech): string {
+        $hex = $tech->technologyField?->color ?? '#6b7280';
+        return "color:{$hex};border-color:{$hex}4d;background:{$hex}0d;";
+    };
     $firstName = Str::before($profile?->user?->name ?? config('app.name'), ' ');
 @endphp
 
@@ -180,7 +183,7 @@
                     @if ($experience->technologies->count())
                         <div class="tags">
                             @foreach ($experience->technologies as $tech)
-                                <span class="tag {{ $tagColor($tech->name) }}">{{ $tech->name }}</span>
+                                <span class="tag" style="{{ $tagStyle($tech) }}">{{ $tech->name }}</span>
                             @endforeach
                         </div>
                     @endif
@@ -236,7 +239,7 @@
                         @if ($project->technologies->count())
                             <div class="tags">
                                 @foreach ($project->technologies->take(4) as $tech)
-                                    <span class="tag {{ $tagColor($tech->name) }}">{{ $tech->name }}</span>
+                                    <span class="tag" style="{{ $tagStyle($tech) }}">{{ $tech->name }}</span>
                                 @endforeach
                                 @if ($project->technologies->count() > 4)
                                     <span class="tag">+{{ $project->technologies->count() - 4 }}</span>
