@@ -97,7 +97,7 @@
             <p class="hero__eyebrow reveal">{{ $profile->job_title ?? 'Developer' }}</p>
 
             <h1 class="hero__name reveal" style="transition-delay: 0.1s">
-                Hey! <em>I'm {{ $profile->user?->name ?? 'there' }}</em>
+                Hey!<em>I'm {{ $profile->user?->name ?? 'there' }}</em>
             </h1>
 
             @if ($profile->bio)

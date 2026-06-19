@@ -53,9 +53,10 @@ body {
     color: var(--text);
     font-family: 'DM Sans', system-ui, sans-serif;
     font-weight: 300;
-    line-height: 1.65;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 0.2s, color 0.2s;
+    transition: background-color 0.25s, color 0.25s;
 }
 
 a {
@@ -240,7 +241,7 @@ a:hover {
 .section {
     max-width: var(--max-w);
     margin: 0 auto;
-    padding: 5.5rem 2rem;
+    padding: 7rem 2rem;
 }
 
 .section:not(.section--hero) {
@@ -250,10 +251,10 @@ a:hover {
 .section__label {
     font-size: 0.68rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--text-dim);
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -279,12 +280,12 @@ a:hover {
 }
 
 .hero__eyebrow {
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--text-dim);
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -296,38 +297,41 @@ a:hover {
     width: 2rem;
     height: 0.5px;
     background: var(--text-dim);
+    flex-shrink: 0;
 }
 
 .hero__name {
     font-family: 'DM Serif Display', Georgia, serif;
-    font-size: clamp(2.8rem, 7vw, 4.6rem);
+    font-size: clamp(3.5rem, 8vw, 6rem);
     font-weight: 400;
-    line-height: 1.07;
+    line-height: 1.04;
     letter-spacing: -0.03em;
     color: var(--text);
-    margin-bottom: 1.75rem;
+    margin-bottom: 2rem;
 }
 
 .hero__name em {
     font-style: italic;
     color: var(--text-mid);
+    display: block;
 }
 
 .hero__bio {
-    font-size: 0.98rem;
+    font-size: 1rem;
     font-weight: 300;
-    line-height: 1.8;
+    line-height: 1.85;
     color: var(--text-dim);
-    max-width: 500px;
-    margin-bottom: 2.25rem;
+    max-width: 460px;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.005em;
 }
 
 .hero__actions {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2.75rem;
 }
 
 /* ── BUTTONS ─────────────────────────────────────── */
@@ -375,8 +379,8 @@ a:hover {
 .hero__meta {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding-top: 1.75rem;
+    gap: 0.875rem;
+    padding-top: 2rem;
     border-top: 0.5px solid var(--border);
 }
 
@@ -417,9 +421,9 @@ a:hover {
 
 .timeline__item {
     display: grid;
-    grid-template-columns: 130px 1fr;
-    gap: 2.5rem;
-    padding: 2rem 0;
+    grid-template-columns: 120px 1fr;
+    gap: 3rem;
+    padding: 2.5rem 0;
     border-bottom: 0.5px solid var(--border);
 }
 
@@ -433,28 +437,30 @@ a:hover {
 }
 
 .timeline__aside {
-    padding-top: 0.15rem;
+    padding-top: 0.2rem;
 }
 
 .timeline__dates {
     font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: var(--text-dim);
-    line-height: 1.5;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
 }
 
 .timeline__body {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.5rem;
 }
 
 .timeline__role {
-    font-size: 0.95rem;
+    font-size: 0.975rem;
     font-weight: 500;
     color: var(--text);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
     display: block;
+    line-height: 1.3;
 }
 
 .timeline__company {
@@ -462,15 +468,19 @@ a:hover {
     font-weight: 300;
     color: var(--text-dim);
     display: block;
+    margin-top: 0.1rem;
 }
 
 .timeline__company a {
-    color: var(--text-mid);
-    border-bottom: 0.5px solid var(--border-mid);
+    color: var(--text-dim);
+    border-bottom: 0.5px solid var(--border);
+    transition: color 0.2s, border-color 0.2s;
 }
 
 .timeline__company a:hover {
-    opacity: 0.7;
+    color: var(--text);
+    border-color: var(--border-mid);
+    opacity: 1;
 }
 
 .timeline__type {
@@ -489,11 +499,12 @@ a:hover {
 }
 
 .timeline__desc {
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     font-weight: 300;
-    line-height: 1.7;
+    line-height: 1.75;
     color: var(--text-dim);
-    margin-top: 0.1rem;
+    margin-top: 0.2rem;
+    letter-spacing: 0.005em;
 }
 
 .badge--now {
@@ -556,16 +567,18 @@ a:hover {
 .project-card {
     background: var(--surface);
     border: 0.5px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: background 0.2s, border-color 0.2s;
+    transition: background 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
 }
 
 .project-card:hover {
     background: var(--bg-alt);
     border-color: var(--border-mid);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+    transform: translateY(-2px);
 }
 
 .project-cover {
@@ -587,10 +600,10 @@ a:hover {
 }
 
 .project-card__body {
-    padding: 1.5rem 1.75rem 1.75rem;
+    padding: 1.5rem 1.5rem 1.75rem;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.65rem;
     flex: 1;
 }
 
@@ -603,11 +616,11 @@ a:hover {
 
 .project-card__name {
     font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 400;
     color: var(--text);
     letter-spacing: -0.02em;
-    line-height: 1.3;
+    line-height: 1.25;
 }
 
 .project-card__status {
@@ -645,11 +658,12 @@ a:hover {
 }
 
 .project-card__desc {
-    font-size: 0.83rem;
+    font-size: 0.85rem;
     font-weight: 300;
-    line-height: 1.7;
+    line-height: 1.75;
     color: var(--text-dim);
     flex: 1;
+    letter-spacing: 0.005em;
 }
 
 .project-card__footer {
@@ -689,53 +703,56 @@ a:hover {
 /* ── CONTACT ─────────────────────────────────────── */
 
 .contact__text {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 300;
-    line-height: 1.85;
-    color: var(--text-mid);
-    max-width: 520px;
-    margin-bottom: 2rem;
+    line-height: 1.9;
+    color: var(--text-dim);
+    max-width: 500px;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.005em;
 }
 
 .contact__details {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1.25rem;
-    padding-top: 1.75rem;
+    gap: 1.75rem;
+    padding-top: 2rem;
     border-top: 0.5px solid var(--border);
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 .contact__detail-label {
     font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
+    font-size: 0.63rem;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     color: var(--text-dim);
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.5rem;
 }
 
 .contact__detail-value {
-    font-size: 0.88rem;
+    font-size: 0.875rem;
     font-weight: 300;
     color: var(--text);
+    line-height: 1.5;
 }
 
 .contact__detail-value a {
-    color: var(--text-mid);
+    color: var(--text);
     border-bottom: 0.5px solid var(--border-mid);
     padding-bottom: 0.05rem;
+    transition: border-color 0.2s, opacity 0.2s;
 }
 
 .contact__detail-value a:hover {
-    color: var(--text);
-    opacity: 1;
+    border-color: var(--border-strong);
+    opacity: 0.65;
 }
 
 .contact__detail-value--links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.875rem;
 }
 
 /* ── FOOTER ──────────────────────────────────────── */
@@ -743,7 +760,7 @@ a:hover {
 .footer {
     max-width: var(--max-w);
     margin: 0 auto;
-    padding: 1.25rem 2rem 1.5rem;
+    padding: 1.75rem 2rem 2rem;
     border-top: 0.5px solid var(--border);
     display: flex;
     justify-content: space-between;
@@ -753,13 +770,14 @@ a:hover {
 
 .footer__links {
     display: flex;
-    gap: 1.5rem;
+    gap: 1.75rem;
 }
 
 .footer__links a {
     font-size: 0.78rem;
     font-weight: 300;
     color: var(--text-dim);
+    letter-spacing: 0.01em;
     transition: color 0.2s;
 }
 
@@ -772,6 +790,7 @@ a:hover {
     font-family: 'DM Mono', monospace;
     font-size: 0.68rem;
     color: var(--text-dim);
+    letter-spacing: 0.01em;
 }
 
 /* ── ANIMATIONS ──────────────────────────────────── */
@@ -982,7 +1001,7 @@ a:hover {
     }
 
     .section {
-        padding: 4rem 1.25rem;
+        padding: 4.5rem 1.25rem;
     }
 
     .section--hero {
@@ -990,12 +1009,13 @@ a:hover {
     }
 
     .hero__name {
-        font-size: clamp(2.4rem, 10vw, 3.2rem);
+        font-size: clamp(2.6rem, 11vw, 3.5rem);
     }
 
     .timeline__item {
         grid-template-columns: 1fr;
-        gap: 0.5rem;
+        gap: 0.4rem;
+        padding: 2rem 0;
     }
 
     .timeline__aside {
