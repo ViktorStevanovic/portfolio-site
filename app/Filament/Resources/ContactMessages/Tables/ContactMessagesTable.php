@@ -7,6 +7,7 @@ use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -45,7 +46,8 @@ class ContactMessagesTable
                     ->query(fn (Builder $query) => $query->whereNull('read_at')),
             ])
             ->recordActions([
-                ViewAction::make(),
+                ViewAction::make()
+                    ->modalWidth(Width::ThreeExtraLarge),
                 Action::make('markAsRead')
                     ->label('Mark as read')
                     ->icon(Heroicon::OutlinedCheck)

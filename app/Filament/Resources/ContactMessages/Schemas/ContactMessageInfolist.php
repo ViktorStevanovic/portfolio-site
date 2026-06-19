@@ -12,28 +12,30 @@ class ContactMessageInfolist
     {
         return $schema
             ->components([
-                Section::make('Sender')
-                    ->columns(3)
-                    ->schema([
-                        TextEntry::make('name'),
-                        TextEntry::make('email'),
-                        TextEntry::make('subject')
-                            ->placeholder('No subject'),
-                    ]),
-
-                Section::make('Message')
-                    ->schema([
-                        TextEntry::make('message')
-                            ->columnSpanFull()
-                            ->prose(),
-                    ]),
-
-                Section::make('Meta')
+                Section::make()
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
+                        TextEntry::make('name')
+                            ->label('From'),
+
+                        TextEntry::make('email')
+                            ->label('Email'),
+
+                        TextEntry::make('subject')
+                            ->label('Subject')
+                            ->placeholder('No subject')
+                            ->columnSpanFull(),
+
+                        TextEntry::make('message')
+                            ->label('Message')
+                            ->columnSpanFull()
+                            ->prose(),
+
                         TextEntry::make('created_at')
                             ->label('Received at')
                             ->dateTime(),
+
                         TextEntry::make('read_at')
                             ->label('Read at')
                             ->dateTime()
