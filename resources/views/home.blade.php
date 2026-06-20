@@ -107,18 +107,11 @@
 
             @if ($profile->cv_path)
                 <div class="hero__actions reveal" style="transition-delay: 0.3s">
-                    <a href="{{ route('cv.download') }}" class="btn btn--primary">↓ Resume</a>
+                    <a href="{{ route('cv.download') }}" class="btn btn--primary">Download Resume</a>
                 </div>
             @endif
 
-            <div class="hero__meta reveal" x-data="clock()" style="transition-delay: 0.4s">
-                <div class="hero__meta-item">
-                    <span class="status-dot"></span>
-                    {{ $profile->job_title ?? 'Available' }}
-                </div>
-                <span class="hero__meta-sep">·</span>
-                <div class="hero__meta-item" x-text="currentTime"></div>
-            </div>
+
         </div>
     @else
         <p class="hero__eyebrow" style="opacity: 1">Portfolio coming soon.</p>
@@ -157,10 +150,6 @@
                             </span>
                         @endif
                     </div>
-
-                    @if ($experience->type)
-                        <span class="timeline__type">{{ str_replace('_', ' ', $experience->type) }}</span>
-                    @endif
 
                     @if ($experience->description)
                         <p class="timeline__desc">{{ $experience->description }}</p>
@@ -315,15 +304,14 @@
 {{-- ── FOOTER ───────────────────────────────────────── --}}
 <footer class="footer">
     <div class="footer__links">
-        @if ($profile?->github_url)
-            <a href="{{ $profile->github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>
-        @endif
-        @if ($profile?->linkedin_url)
-            <a href="{{ $profile->linkedin_url }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        @endif
-        @if ($profile?->twitter_url)
-            <a href="{{ $profile->twitter_url }}" target="_blank" rel="noopener noreferrer">Twitter</a>
-        @endif
+        <div class="hero__meta " x-data="clock()" style="transition-delay: 0.4s">
+            <div class="hero__meta-item">
+                <span class="status-dot"></span>
+                {{ 'Available' }}
+            </div>
+            <span class="hero__meta-sep">·</span>
+            <div class="hero__meta-item" x-text="currentTime"></div>
+        </div>
     </div>
     <p class="footer__copy">built with Laravel · {{ $profile?->user?->name ?? config('app.name') }}</p>
 </footer>
@@ -405,7 +393,7 @@
 
                     <button
                         type="submit"
-                        class="btn btn--primary"
+                        class="btn btn--primary contact-btn"
                         style="width: 100%; justify-content: center;"
                         :disabled="sending"
                         :style="sending ? 'opacity: 0.7; cursor: not-allowed;' : ''"
