@@ -18,6 +18,7 @@ class ProfileSeeder extends Seeder
             ['email' => 'stevanovic.viktor@gmail.com'],
             [
                 'name' => 'Viktor Stevanovic',
+                'nickname' => 'Vik',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
             ],

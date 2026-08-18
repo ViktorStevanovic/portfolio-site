@@ -61,6 +61,7 @@ class ProfileForm
                         FileUpload::make('cv_path')
                             ->label('CV / Resume')
                             ->acceptedFileTypes(['application/pdf'])
+                            ->preserveFilenames()
                             ->disk('public')
                             ->directory('profile/cv'),
                     ]),

@@ -25,5 +25,5 @@ Route::get('/cv/download', function () {
 
     $profile->increment('cv_downloads');
 
-    return Storage::disk('public')->download($profile->cv_path);
+    return Storage::disk('public')->download($profile->cv_path, );
 })->name('cv.download');
