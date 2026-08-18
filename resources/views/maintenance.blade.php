@@ -14,9 +14,9 @@
 <div class="maintenance">
     <p class="maintenance__eyebrow">503</p>
     <h1 class="maintenance__heading">Under maintenance<em>Back soon.</em></h1>
-    <p class="maintenance__message">
-        {{ $profile?->tagline ?? 'The site is temporarily down for maintenance. Check back in a little while.' }}
-    </p>
+    {{-- <p class="maintenance__message">
+        {{ 'The site is temporarily down for maintenance. Check back in a little while.' }}
+    </p> --}}
     <div class="maintenance__meta">
         @if ($profile?->email_public)
             <span>Need something urgent? <a href="mailto:{{ $profile->email_public }}">{{ $profile->email_public }}</a></span>

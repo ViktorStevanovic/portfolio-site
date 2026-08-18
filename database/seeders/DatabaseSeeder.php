@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             ConfigurationSeeder::class,
+            ProfileSeeder::class,
         ]);
     }
 }
