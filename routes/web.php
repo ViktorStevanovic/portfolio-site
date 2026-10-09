@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Middleware\LogVisit;
 use App\Http\Middleware\MaintenanceMode;
 use App\Models\Profile;
@@ -14,6 +15,7 @@ Route::middleware([MaintenanceMode::class, LogVisit::class])->group(function () 
 
 Route::middleware(MaintenanceMode::class)->group(function () {
     Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+    Route::get('/projects/{project:code}', [ProjectController::class, 'show'])->name('projects.show');
 });
 
 Route::get('/cv/download', function () {

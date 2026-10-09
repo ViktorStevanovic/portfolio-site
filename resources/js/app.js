@@ -158,4 +158,91 @@ Alpine.data('contactForm', () => ({
     },
 }))
 
+/* Project gallery + lightbox. `items` is [{ src, alt, caption }],
+   passed from Blade with @js(). Keyboard: ←/→ to move, Esc to close;
+   swipe on touch screens. Focus is trapped while open and restored after. */
+Alpine.data('gallery', (items = []) => ({
+    items,
+    index: 0,
+    open: false,
+    returnFocusTo: null,
+    touchX: null,
+
+    init() {
+        this.$watch('open', (isOpen) => {
+            document.documentElement.classList.toggle('modal-open', isOpen)
+            if (isOpen) {
+                this.returnFocusTo = document.activeElement
+                this.$nextTick(() => requestAnimationFrame(() => this.$refs.lightboxClose?.focus()))
+            } else {
+                this.returnFocusTo?.focus?.()
+            }
+        })
+    },
+
+    get current() {
+        return this.items[this.index] ?? {}
+    },
+
+    get counter() {
+        return `${this.index + 1} / ${this.items.length}`
+    },
+
+    show(i) {
+        this.index = i
+        this.open = true
+    },
+
+    next() {
+        if (this.items.length > 1) this.index = (this.index + 1) % this.items.length
+    },
+
+    prev() {
+        if (this.items.length > 1) this.index = (this.index - 1 + this.items.length) % this.items.length
+    },
+
+    onKey(e) {
+        if (!this.open) return
+        if (e.key === 'ArrowRight') { e.preventDefault(); this.next() }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); this.prev() }
+        else if (e.key === 'Escape') { this.open = false }
+    },
+
+    trapFocus(e) {
+        const els = [...this.$refs.lightbox.querySelectorAll('button:not([disabled])')]
+            .filter((el) => el.offsetParent !== null)
+        if (!els.length) return
+        const first = els[0], last = els[els.length - 1]
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+    },
+
+    touchStart(e) {
+        this.touchX = e.changedTouches[0].clientX
+    },
+
+    touchEnd(e) {
+        if (this.touchX === null) return
+        const dx = e.changedTouches[0].clientX - this.touchX
+        if (Math.abs(dx) > 50) dx < 0 ? this.next() : this.prev()
+        this.touchX = null
+    },
+}))
+
+/* Images marked data-fit fill their frame by default (screenshots).
+   If an image would need upscaling at all in either
+   direction to fill it (an icon or logo), it gets .is-small and is
+   shown at natural size instead. */
+function fitImage(img) {
+    const frame = img.parentElement
+    if (!img.naturalWidth || !frame) return
+    const small = img.naturalWidth < frame.clientWidth
+               || img.naturalHeight < frame.clientHeight
+    img.classList.toggle('is-small', small)
+}
+document.addEventListener('load', (e) => {
+    if (e.target instanceof HTMLImageElement && e.target.hasAttribute('data-fit')) fitImage(e.target)
+}, true)
+document.querySelectorAll('img[data-fit]').forEach((img) => img.complete && fitImage(img))
+
 Alpine.start()

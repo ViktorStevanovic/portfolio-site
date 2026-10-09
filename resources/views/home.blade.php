@@ -234,10 +234,10 @@
     <div class="stagger grid md:grid-cols-2 gap-6">
         @foreach ($projects as $project)
             @php $cover = $project->images->firstWhere('is_cover', true) ?? $project->images->first(); @endphp
-            <article class="card" aria-labelledby="project-{{ $project->id }}-title">
+            <article @class(['card', 'card--link' => $project->code]) aria-labelledby="project-{{ $project->id }}-title">
                 <div class="card__media">
                     @if ($cover)
-                        <img src="{{ Storage::url($cover->image) }}" alt="{{ $project->name }}" loading="lazy" decoding="async">
+                        <img src="{{ Storage::url($cover->image) }}" alt="" loading="lazy" decoding="async" data-fit>
                     @else
                         <div class="w-full h-full flex items-center justify-center text-text-muted">
                             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -249,7 +249,13 @@
 
                 <div class="flex flex-col flex-1 p-6">
                     <div class="flex items-start justify-between gap-4">
-                        <h3 id="project-{{ $project->id }}-title" class="h-card">{{ $project->name }}</h3>
+                        <h3 id="project-{{ $project->id }}-title" class="h-card">
+                            @if ($project->code)
+                                <a href="{{ route('projects.show', $project) }}" class="card__link">{{ $project->name }}</a>
+                            @else
+                                {{ $project->name }}
+                            @endif
+                        </h3>
                         @php
                             $statusClasses = match($project->status) {
                                 'completed'   => 'badge--accent',
