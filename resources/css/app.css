@@ -1,217 +1,600 @@
-@import url('https://fonts.bunny.net/css?family=dm-serif-display:400,400i|dm-sans:300,400,500|dm-mono:400,500&display=swap');
+/* Fonts are loaded with a <link> in the Blade <head> (not @import here):
+   an @import inside the bundled CSS is only discovered after app.css
+   downloads, which delays text paint by one full round-trip. */
 
 @import 'tailwindcss';
 
-/* Enable class-based dark mode: `dark:` variants respond to a `.dark` ancestor */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ──────────────────────────────────────────────────────────
-   THEME TOKENS
-   Colors are defined per–color-scheme below and surfaced to
-   Tailwind here so utilities like `bg-bg`, `text-text-soft`,
-   `border-border-mid`, `font-serif` work directly in markup.
-   ────────────────────────────────────────────────────────── */
-@theme {
-    --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
-    --font-serif: 'DM Serif Display', ui-serif, Georgia, serif;
-    --font-mono: 'DM Mono', ui-monospace, monospace;
+/* ══════════════════════════════════════════════════════════════
+   1 · PRIMITIVES (theme-independent)
+   Accent: one hue (OKLCH h≈215, deep ink-teal), ten steps.
+   Neutrals: a whisper of warmth (h≈85, C≤0.01) — warm paper
+   against cool ink is the deliberate temperature contrast.
+   ══════════════════════════════════════════════════════════════ */
+:root {
+    --teal-50:  #e8f9fd;   /* oklch(.97  .018 215) */
+    --teal-100: #d3f0f7;   /* oklch(.935 .032 215) */
+    --teal-200: #acdeeb;   /* oklch(.87  .055 215) */
+    --teal-300: #7dc4d5;   /* oklch(.78  .075 215) */
+    --teal-400: #53a6b9;   /* oklch(.68  .085 215) */
+    --teal-500: #2b899d;   /* oklch(.585 .090 215) */
+    --teal-600: #166f80;   /* oklch(.50  .082 215) */
+    --teal-700: #0f5866;   /* oklch(.425 .070 215) */
+    --teal-800: #0e424c;   /* oklch(.35  .055 215) */
+    --teal-900: #0a2b33;   /* oklch(.27  .040 215) */
 
-    /* map the semantic tokens to Tailwind color utilities */
+    /* ── Layout ───────────────────────────────────────────── */
+    --max-w: 60rem;                 /* 960px: room for 2 project cards */
+    --nav-h: 4.25rem;               /* 68px */
+    --col-meta: 10rem;              /* shared left "meta" column (dates, contact labels) */
+    --measure: 65ch;
+
+    /* ── Spacing rhythm (4px base; Tailwind's --spacing is 0.25rem) ── */
+    --gutter:    clamp(1.25rem, 0.75rem + 2.5vw, 2rem);    /* 20 → 32px */
+    --section-y: clamp(4.5rem, 3rem + 6vw, 8rem);          /* 72 → 128px */
+    --block-gap: clamp(2.5rem, 2rem + 2vw, 3.5rem);        /* 40 → 56px: section head → content */
+    --stack-sm: 0.5rem;   /*  8px: label → value */
+    --stack-md: 1rem;     /* 16px: paragraph → paragraph */
+    --stack-lg: 1.5rem;   /* 24px: text block → actions */
+
+    /* ── Radii (3 only; sm/lg live in @theme below) ───────── */
+    --radius-full: 999px;    /* buttons, pills, badges */
+
+    /* ── Borders ──────────────────────────────────────────── */
+    --hairline: 1px;         /* 0.5px rendered inconsistently on 1x screens */
+
+    /* ── Motion ───────────────────────────────────────────── */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --dur-fast: 150ms;
+    --dur-base: 250ms;
+    --dur-slow: 600ms;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2 · SEMANTIC TOKENS — LIGHT
+   Contrast (WCAG 2.x) vs bg / bg-alt / surface:
+     text            16.8 / 15.7 / 17.4
+     text-secondary   7.8 /  7.3 /  8.1
+     text-muted       5.2 /  4.8 /  5.3   ← AA even on bg-alt
+     accent           5.6 /  5.2 /  5.8
+     border-strong    3.3 (UI-component 3:1, used for inputs)
+   ══════════════════════════════════════════════════════════════ */
+:root {
+    color-scheme: light;
+
+    --bg:       #fbfaf7;
+    --bg-alt:   #f4f2ee;   /* sunken: image placeholders, inputs */
+    --surface:  #fefefc;   /* raised: cards, modal */
+    --surface-2: #ffffff;
+
+    --text:           #1c1914;
+    --text-secondary: #524f4a;
+    --text-muted:     #6d6a64;
+
+    --border:        rgb(28 25 20 / 0.10);
+    --border-mid:    rgb(28 25 20 / 0.16);
+    --border-strong: rgb(28 25 20 / 0.50);
+
+    --accent:        var(--teal-600);
+    --accent-strong: var(--teal-700);
+    --accent-soft:   color-mix(in oklab, var(--accent) 9%, transparent);
+    --accent-line:   color-mix(in oklab, var(--accent) 28%, transparent);
+    --on-accent:     #ffffff;
+
+    --warn:       #925a25;   /* 5.4:1 — "in progress" */
+    --warn-soft:  color-mix(in oklab, var(--warn) 9%, transparent);
+    --warn-line:  color-mix(in oklab, var(--warn) 28%, transparent);
+    --danger:     #af3c3a;   /* 5.7:1 — form errors (was #c96060, 3.8:1) */
+
+    --neutral-soft: rgb(28 25 20 / 0.04);
+    --selection:    color-mix(in oklab, var(--accent) 18%, transparent);
+    --nav-bg:       color-mix(in oklab, var(--bg) 82%, transparent);
+    --overlay:      rgb(28 25 20 / 0.40);
+
+    /* Tech-tag dot: DB hue, normalized lightness/chroma */
+    --tag-l: 0.62;
+    --tag-c: 0.12;
+
+    --shadow-color: 30 25 15;
+    --elev-sm: 0 1px 2px rgb(var(--shadow-color) / 0.05);
+    --elev-md: 0 1px 2px rgb(var(--shadow-color) / 0.04), 0 12px 32px -12px rgb(var(--shadow-color) / 0.14);
+    --elev-lg: 0 2px 4px rgb(var(--shadow-color) / 0.04), 0 24px 64px -16px rgb(var(--shadow-color) / 0.24);
+
+    /* Back-compat aliases — remove once no other view uses them */
+    --text-soft: var(--text-secondary);
+    --text-mid:  var(--text-secondary);
+    --text-dim:  var(--text-muted);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3 · SEMANTIC TOKENS — DARK (not an inversion)
+   Warm charcoal base (never #000), off-white text (never #fff),
+   accent chroma lowered ~17%, elevation = lighter surfaces.
+   Contrast vs bg / surface / surface-2:
+     text            15.6 / 14.5 / 13.4
+     text-secondary   9.4 /  8.8 /  8.1
+     text-muted       6.2 /  5.7 /  5.3
+     accent           9.0 /  8.4 /  7.8
+     border-strong    3.4 on surface
+   ══════════════════════════════════════════════════════════════ */
+.dark {
+    color-scheme: dark;
+
+    --bg:        #13110f;
+    --bg-alt:    #0d0c0a;   /* sunken goes darker */
+    --surface:   #1b1916;   /* raised goes lighter */
+    --surface-2: #22201c;
+
+    --text:           #ece9e4;
+    --text-secondary: #bab7b0;
+    --text-muted:     #96938d;
+
+    --border:        rgb(236 233 228 / 0.10);
+    --border-mid:    rgb(236 233 228 / 0.16);
+    --border-strong: rgb(236 233 228 / 0.40);
+
+    --accent:        #7ebdcc;   /* oklch(.76 .068 215) */
+    --accent-strong: #a6d3df;   /* oklch(.84 .050 215) */
+    --accent-soft:   color-mix(in oklab, var(--accent) 12%, transparent);
+    --accent-line:   color-mix(in oklab, var(--accent) 30%, transparent);
+    --on-accent:     #13110f;
+
+    --warn:       #ddae77;
+    --warn-soft:  color-mix(in oklab, var(--warn) 12%, transparent);
+    --warn-line:  color-mix(in oklab, var(--warn) 30%, transparent);
+    --danger:     #ed8c84;
+
+    --neutral-soft: rgb(236 233 228 / 0.05);
+    --selection:    color-mix(in oklab, var(--accent) 26%, transparent);
+    --nav-bg:       color-mix(in oklab, var(--bg) 80%, transparent);
+    --overlay:      rgb(0 0 0 / 0.55);
+
+    --tag-l: 0.72;
+    --tag-c: 0.10;
+
+    /* Shadows barely register on dark; borders + surface steps carry depth */
+    --shadow-color: 0 0 0;
+    --elev-sm: none;
+    --elev-md: 0 16px 40px -16px rgb(0 0 0 / 0.5);
+    --elev-lg: 0 24px 64px -16px rgb(0 0 0 / 0.6);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4 · TAILWIND THEME
+   `inline` makes utilities reference the runtime vars directly,
+   so they follow .dark wherever it is applied.
+   ══════════════════════════════════════════════════════════════ */
+@theme inline {
     --color-bg: var(--bg);
     --color-bg-alt: var(--bg-alt);
     --color-surface: var(--surface);
+    --color-surface-2: var(--surface-2);
     --color-border: var(--border);
     --color-border-mid: var(--border-mid);
     --color-border-strong: var(--border-strong);
     --color-text: var(--text);
-    --color-text-soft: var(--text-soft);
-    --color-text-mid: var(--text-mid);
-    --color-text-dim: var(--text-dim);
+    --color-text-secondary: var(--text-secondary);
+    --color-text-muted: var(--text-muted);
     --color-accent: var(--accent);
+    --color-accent-strong: var(--accent-strong);
+    --color-danger: var(--danger);
+    /* aliases */
+    --color-text-soft: var(--text-secondary);
+    --color-text-mid: var(--text-secondary);
+    --color-text-dim: var(--text-muted);
 
-    --max-w: 880px;
-    --nav-h: 68px;
+    --spacing-gutter: var(--gutter);
+    --spacing-section: var(--section-y);
+    --spacing-block: var(--block-gap);
+    --spacing-stack-sm: var(--stack-sm);
+    --spacing-stack-md: var(--stack-md);
+    --spacing-stack-lg: var(--stack-lg);
 
-    /* The original design switches to its mobile layout at 680px
-       (max-width:680px) / desktop at 681px (min-width:681px).
-       Retune `md` so `md:` = ≥681px and `max-md:` = ≤680px,
-       matching the source breakpoints exactly. */
-    --breakpoint-md: 681px;
+    --container-page: var(--max-w);
+    --container-measure: var(--measure);
+
+    --shadow-sm: var(--elev-sm);
+    --shadow-md: var(--elev-md);
+    --shadow-lg: var(--elev-lg);
 }
 
-/* ──────────────────────────────────────────────────────────
-   SEMANTIC TOKENS — a proper, ordered emphasis ramp.
+@theme static {
+    --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'DM Serif Display', ui-serif, Georgia, serif;
+    --font-mono: 'DM Mono', ui-monospace, 'SFMono-Regular', monospace;
 
-   Text weight of emphasis DECREASES down this list. The old
-   file had --text-mid (#bdbdbd) lighter than --text-dim
-   (#909090), inverting the hierarchy; that's corrected here.
+    /* Type scale — 8 steps. Text steps move by ~1.125 (12→20px) so
+       UI sizes stay close; display steps are fluid and jump by ~1.4
+       so headings separate clearly from text. */
+    --text-*: initial;
+    --text-xs: 0.75rem;        --text-xs--line-height: 1.5;     /* 12 mono labels, tags, dates */
+    --text-sm: 0.875rem;       --text-sm--line-height: 1.55;    /* 14 nav, buttons, meta */
+    --text-base: 1rem;         --text-base--line-height: 1.7;   /* 16 body */
+    --text-md: 1.125rem;       --text-md--line-height: 1.6;     /* 18 lead, role titles */
+    --text-lg: 1.375rem;       --text-lg--line-height: 1.3;     /* 22 card titles (h3) */
+    --text-xl: clamp(1.625rem, 1.3rem + 1.4vw, 2.25rem);
+    --text-xl--line-height: 1.15;                               /* 26→36 section titles (h2) */
+    --text-2xl: clamp(2rem, 1.4rem + 2.8vw, 3.25rem);
+    --text-2xl--line-height: 1.1;                               /* 32→52 closing statement */
+    --text-display: clamp(2.75rem, 1.5rem + 6vw, 5.5rem);
+    --text-display--line-height: 1.02;                          /* 44→88 name (h1) */
 
-     text       primary — headings, key values
-     text-soft  body copy — comfortable long-form reading
-     text-mid   secondary — labels, meta, de-emphasized UI
-     text-dim   tertiary — captions, eyebrows, timestamps
-   ────────────────────────────────────────────────────────── */
+    --radius-*: initial;
+    --radius-sm: 0.5rem;     /* inputs, small controls */
+    --radius-lg: 1rem;       /* cards, modal */
 
-/* ── SEMANTIC TOKENS (light) ─────────────────────── */
-:root {
-    --bg: #fafaf8;
-    --bg-alt: #f4f4ef;
-    --surface: #ffffff;
-
-    --border: rgba(23, 23, 20, 0.09);
-    --border-mid: rgba(23, 23, 20, 0.15);
-    --border-strong: rgba(23, 23, 20, 0.28);
-
-    --text: #16150f;
-    --text-soft: #52514a;
-    --text-mid: #77766d;
-    --text-dim: #9b9a90;
-
-    --accent: #3f8c9d;
-    --accent-soft: rgba(63, 157, 111, 0.10);
-    --accent-line: rgba(63, 157, 111, 0.24);
-
-    --selection: rgba(63, 157, 111, 0.16);
+    --breakpoint-md: 681px;   /* unchanged: other views may rely on it */
 }
 
-/* ── SEMANTIC TOKENS (dark) ──────────────────────── */
-.dark {
-    --bg: #100f0d;
-    --bg-alt: #181714;
-    --surface: #191815;
-
-    --border: rgba(255, 253, 245, 0.09);
-    --border-mid: rgba(255, 253, 245, 0.15);
-    --border-strong: rgba(255, 253, 245, 0.30);
-
-    --text: #f2f1ea;
-    --text-soft: #b9b7ac;
-    --text-mid: #8a887d;
-    --text-dim: #625f56;
-
-    --accent: #5c97c4;
-    --accent-soft: rgba(92, 196, 141, 0.12);
-    --accent-line: rgba(92, 196, 141, 0.28);
-
-    --selection: rgba(92, 196, 141, 0.20);
-}
-
-/* ── BASE ────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   5 · BASE
+   ══════════════════════════════════════════════════════════════ */
 @layer base {
     html {
         scroll-behavior: smooth;
-        /* Anchor targets clear the fixed nav */
         scroll-padding-top: calc(var(--nav-h) + 1rem);
+        -webkit-text-size-adjust: 100%;
     }
+    html.modal-open { overflow: hidden; }
 
     body {
         background: var(--bg);
         color: var(--text);
         font-family: var(--font-sans);
-        font-weight: 300;
+        font-size: var(--text-base);
+        font-weight: 400;              /* 300 at ≤16px thinned below legible */
         line-height: 1.7;
-        letter-spacing: 0.01em;
         -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
-        transition: background-color 0.3s ease, color 0.3s ease;
+        transition: background-color var(--dur-base) ease, color var(--dur-base) ease;
     }
 
-    /* Optical polish for the display face */
-    .font-serif {
-        font-feature-settings: 'liga' 1, 'kern' 1;
-    }
+    h1, h2, h3, h4 { text-wrap: balance; }
+    p { text-wrap: pretty; }
+
+    .font-serif { font-feature-settings: 'liga' 1, 'kern' 1; }
+    .font-mono  { font-feature-settings: 'zero' 0, 'tnum' 1; }
 
     a {
         color: inherit;
         text-decoration: none;
-        transition: opacity 0.2s, color 0.2s;
+        transition: color var(--dur-fast) ease, text-decoration-color var(--dur-fast) ease;
     }
 
-    a:hover {
-        opacity: 0.62;
-    }
+    ::selection { background: var(--selection); }
 
-    ::selection {
-        background: var(--selection);
-    }
-
-    /* Consistent, accessible keyboard focus across the whole page */
     :focus-visible {
         outline: 2px solid var(--accent);
         outline-offset: 3px;
-        border-radius: 3px;
+        border-radius: 4px;
     }
-    /* Inputs express focus via their own border treatment */
-    input:focus-visible,
-    textarea:focus-visible {
-        outline: none;
-    }
+    /* Fields draw their own focus ring (border + soft halo) */
+    .field:focus-visible { outline: none; }
 
-    @media (prefers-reduced-motion: reduce) {
-        html { scroll-behavior: auto; }
-        *, *::before, *::after {
-            animation-duration: 0.001ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.001ms !important;
-        }
-        .reveal, .stagger > * { opacity: 1 !important; transform: none !important; }
-    }
+    [x-cloak] { display: none !important; }
 }
 
-/* ──────────────────────────────────────────────────────────
-   COMPONENT LAYER
-   Only the pieces that can't be expressed cleanly inline:
-   pseudo-element underlines/dividers, keyframe animations,
-   the scroll reveal/stagger system, and the status dot pulse.
-   Everything else lives as utilities in the Blade markup.
-   ────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   6 · COMPONENTS
+   ══════════════════════════════════════════════════════════════ */
 @layer components {
 
-    /* Nav underline animation (::after) + active/hover state */
+    /* ── Skip link ─────────────────────────────────────── */
+    .skip-link {
+        position: fixed;
+        top: 0.75rem;
+        left: 0.75rem;
+        z-index: 300;
+        padding: 0.625rem 1rem;
+        border-radius: var(--radius-full);
+        background: var(--text);
+        color: var(--bg);
+        font-size: var(--text-sm);
+        font-weight: 500;
+        transform: translateY(-200%);
+        transition: transform var(--dur-base) var(--ease-out);
+    }
+    .skip-link:focus-visible { transform: translateY(0); }
+
+    /* ── Eyebrow / label (mono, uppercase) ─────────────── */
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        font-weight: 400;
+        line-height: 1.5;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+    }
+    .eyebrow--rule::before {
+        content: '';
+        width: 2rem;
+        height: var(--hairline);
+        background: var(--accent);
+        flex-shrink: 0;
+    }
+
+    /* ── Headings: style is independent of the tag ─────── */
+    .h-display {
+        font-family: var(--font-serif);
+        font-size: var(--text-display);
+        line-height: var(--text-display--line-height);
+        font-weight: 400;
+        letter-spacing: -0.03em;
+        color: var(--text);
+    }
+    .h-section {
+        font-family: var(--font-serif);
+        font-size: var(--text-xl);
+        line-height: var(--text-xl--line-height);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        color: var(--text);
+    }
+    .h-card {
+        font-family: var(--font-serif);
+        font-size: var(--text-lg);
+        line-height: var(--text-lg--line-height);
+        font-weight: 400;
+        letter-spacing: -0.015em;
+        color: var(--text);
+    }
+
+    /* ── Section header (title + count, one baseline) ──── */
+    .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: var(--block-gap);
+    }
+
+    /* ── Nav link with underline indicator ─────────────── */
     .nav-link {
         position: relative;
-        transition: color 0.2s;
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.75rem;
+        font-size: var(--text-sm);
+        color: var(--text-secondary);
+        transition: color var(--dur-fast) ease;
     }
     .nav-link::after {
         content: '';
         position: absolute;
-        bottom: -4px;
         left: 0;
-        width: 0;
-        height: 1px;
-        background: var(--text);
-        transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        right: 0;
+        bottom: 0.55rem;
+        height: var(--hairline);
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform var(--dur-base) var(--ease-in-out);
     }
-    .nav-link:hover,
-    .nav-link.active {
-        color: var(--text);
-        opacity: 1;
-    }
+    .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--text); }
     .nav-link:hover::after,
-    .nav-link.active::after {
-        width: 100%;
+    .nav-link.active::after { transform: scaleX(1); }
+
+    .menu-link {
+        display: flex;
+        align-items: center;
+        min-height: 2.75rem;
+        font-size: var(--text-base);
+        color: var(--text-secondary);
+        border-bottom: var(--hairline) solid var(--border);
+    }
+    .menu-link:last-child { border-bottom: 0; }
+    .menu-link:hover, .menu-link.active { color: var(--text); }
+
+    /* ── Buttons ───────────────────────────────────────── */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 2.75rem;            /* 44px touch target */
+        padding: 0 1.25rem;
+        border: var(--hairline) solid transparent;
+        border-radius: var(--radius-full);
+        font-family: var(--font-sans);
+        font-size: var(--text-sm);
+        font-weight: 500;
+        line-height: 1;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: background-color var(--dur-fast) ease, border-color var(--dur-fast) ease,
+                    color var(--dur-fast) ease, transform var(--dur-fast) ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn[disabled] { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn svg { flex-shrink: 0; }
+
+    .btn--primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .btn--primary:hover { background: color-mix(in oklab, var(--text) 86%, var(--bg)); }
+
+    .btn--secondary { background: transparent; color: var(--text); border-color: var(--border-strong); }
+    .btn--secondary:hover { border-color: var(--text); background: var(--neutral-soft); }
+
+    .btn--ghost { background: transparent; color: var(--text-secondary); padding-inline: 0.75rem; }
+    .btn--ghost:hover { color: var(--text); background: var(--neutral-soft); }
+
+    .btn--sm { min-height: 2.25rem; padding-inline: 0.875rem; font-size: var(--text-xs); }
+    .btn--block { width: 100%; }
+
+    /* ── Icon button (theme toggle, menu, close) ───────── */
+    .icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: var(--radius-full);
+        border: var(--hairline) solid var(--border-mid);
+        background: transparent;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+    }
+    .icon-btn:hover { color: var(--text); border-color: var(--border-strong); background: var(--neutral-soft); }
+    @media (min-width: 681px) {
+        .icon-btn { width: 2.5rem; height: 2.5rem; }
     }
 
-    /* Eyebrow / section label leading rule (::before) */
-    .rule-before::before {
-        content: '';
-        display: inline-block;
-        height: 1px;
-        background: var(--text-dim);
+    /* ── Text links ────────────────────────────────────── */
+    .link {
+        color: var(--text);
+        text-decoration: underline;
+        text-decoration-thickness: var(--hairline);
+        text-underline-offset: 0.25em;
+        text-decoration-color: var(--border-strong);
+    }
+    .link:hover { text-decoration-color: var(--accent); }
+    .link--quiet { color: inherit; text-decoration-color: var(--border-mid); }
+    .link--quiet:hover { color: var(--text); text-decoration-color: var(--text-muted); }
+
+    /* Card actions: arrow links with a real hit area */
+    .action-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        min-height: 2.75rem;
+        font-size: var(--text-sm);
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+    .action-link:hover { color: var(--text); }
+    .action-link--accent { color: var(--accent); }
+    .action-link--accent:hover { color: var(--accent-strong); }
+    .action-link svg { transition: transform var(--dur-fast) var(--ease-out); }
+    .action-link:hover svg { transform: translate(2px, -2px); }
+
+    /* ── Tech tag: neutral pill + harmonized DB-color dot ─ */
+    .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.25rem 0.625rem;
+        border: var(--hairline) solid var(--border-mid);
+        border-radius: var(--radius-full);
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        line-height: 1.4;
+        color: var(--text-secondary);
+        white-space: nowrap;
+    }
+    .tag__dot {
+        width: 0.375rem;
+        height: 0.375rem;
+        border-radius: 50%;
         flex-shrink: 0;
-        opacity: 0.7;
+        /* Fallback: raw DB color. Upgrade: keep its hue, but force the
+           palette's lightness/chroma so every field sits in one family. */
+        background: var(--tag, var(--text-muted));
+        background: oklch(from var(--tag, var(--text-muted)) var(--tag-l) var(--tag-c) h);
     }
-    .rule-before--sm::before { width: 1.75rem; }
-    .rule-before--lg::before { width: 2.25rem; }
 
-    /* Animated availability dot — soft halo + core */
+    /* ── Status badge ──────────────────────────────────── */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.125rem 0.5rem;
+        border: var(--hairline) solid var(--border-mid);
+        border-radius: var(--radius-full);
+        background: var(--neutral-soft);
+        color: var(--text-secondary);
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        line-height: 1.5;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+    }
+    .badge::before {
+        content: '';
+        width: 0.3125rem;
+        height: 0.3125rem;
+        border-radius: 50%;
+        background: currentColor;
+    }
+    .badge--accent { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent); }
+    .badge--warn   { background: var(--warn-soft);   border-color: var(--warn-line);   color: var(--warn); }
+
+    /* ── Card ──────────────────────────────────────────── */
+    .card {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: var(--surface);
+        border: var(--hairline) solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--elev-sm);
+        transition: border-color var(--dur-base) ease, box-shadow var(--dur-base) ease,
+                    transform var(--dur-base) var(--ease-out);
+    }
+    .card:hover,
+    .card:focus-within {
+        border-color: var(--border-mid);
+        box-shadow: var(--elev-md);
+    }
+    @media (hover: hover) {
+        .card:hover { transform: translateY(-2px); }
+    }
+    .card__media {
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background: var(--bg-alt);
+        border-bottom: var(--hairline) solid var(--border);
+    }
+    .card__media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform var(--dur-slow) var(--ease-out);
+    }
+    .card:hover .card__media img { transform: scale(1.02); }
+
+    /* ── Form fields ───────────────────────────────────── */
+    .field-label {
+        font-size: var(--text-sm);
+        font-weight: 500;
+        color: var(--text);
+    }
+    .field-label .req { color: var(--text-muted); font-weight: 400; }
+    .field {
+        width: 100%;
+        min-height: 2.75rem;
+        padding: 0.625rem 0.875rem;
+        background: var(--bg);
+        border: var(--hairline) solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        color: var(--text);
+        font-family: var(--font-sans);
+        font-size: var(--text-base);    /* 16px also prevents iOS zoom-on-focus */
+        line-height: 1.5;
+        transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+    }
+    .field::placeholder { color: var(--text-muted); }
+    .field:hover { border-color: var(--text-muted); }
+    .field:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .field[aria-invalid='true'] { border-color: var(--danger); }
+    .field-error { font-size: var(--text-sm); color: var(--danger); }
+    textarea.field { min-height: 8rem; resize: vertical; }
+
+    /* ── Availability dot ──────────────────────────────── */
     .status-dot {
         position: relative;
-        width: 6px;
-        height: 6px;
+        display: inline-block;
+        width: 0.375rem;
+        height: 0.375rem;
         border-radius: 50%;
         background: var(--accent);
-        display: inline-block;
     }
     .status-dot::after {
         content: '';
@@ -223,62 +606,44 @@
         animation: halo 2.6s ease-in-out infinite;
     }
 
-    /* Underlined inline links (company, contact, resume) */
-    .link-underline {
-        border-bottom: 0.5px solid var(--border);
-        transition: color 0.2s, border-color 0.2s, opacity 0.2s;
-    }
-    .link-underline:hover {
-        color: var(--text);
-        border-color: var(--border-mid);
-        opacity: 1;
-    }
-    .link-underline--strong {
-        border-bottom: 0.5px solid var(--border-mid);
-        padding-bottom: 0.05rem;
-    }
-    .link-underline--strong:hover {
-        border-color: var(--accent);
-        color: var(--text);
-        opacity: 1;
-    }
-
-    /* Scroll reveal */
-    .reveal {
+    /* ── Scroll reveal (only hides content once JS is running) ── */
+    .js .reveal {
         opacity: 0;
-        transform: translateY(18px);
-        transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-                    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        transform: translateY(16px);
+        transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
     }
-    .reveal.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    .js .reveal.visible { opacity: 1; transform: none; }
 
-    /* Staggered children reveal */
-    .stagger > * {
+    .js .stagger > * {
         opacity: 0;
-        transform: translateY(14px);
-        transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-                    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        transform: translateY(12px);
+        transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
     }
-    .stagger.visible > *:nth-child(1) { transition-delay: 0s; }
-    .stagger.visible > *:nth-child(2) { transition-delay: 0.07s; }
-    .stagger.visible > *:nth-child(3) { transition-delay: 0.14s; }
-    .stagger.visible > *:nth-child(4) { transition-delay: 0.21s; }
-    .stagger.visible > *:nth-child(5) { transition-delay: 0.28s; }
-    .stagger.visible > *:nth-child(6) { transition-delay: 0.35s; }
-    .stagger.visible > *:nth-child(7) { transition-delay: 0.42s; }
-    .stagger.visible > *:nth-child(8) { transition-delay: 0.49s; }
-    .stagger.visible > *:nth-child(9) { transition-delay: 0.56s; }
-    .stagger.visible > *:nth-child(10) { transition-delay: 0.63s; }
-    .stagger.visible > * {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    .js .stagger.visible > * { opacity: 1; transform: none; }
+    .stagger.visible > *:nth-child(2)  { transition-delay: 70ms; }
+    .stagger.visible > *:nth-child(3)  { transition-delay: 140ms; }
+    .stagger.visible > *:nth-child(4)  { transition-delay: 210ms; }
+    .stagger.visible > *:nth-child(5)  { transition-delay: 280ms; }
+    .stagger.visible > *:nth-child(6)  { transition-delay: 350ms; }
+    .stagger.visible > *:nth-child(n+7) { transition-delay: 420ms; }
 }
 
 @keyframes halo {
     0%, 100% { opacity: 0.35; transform: scale(1); }
-    50% { opacity: 0; transform: scale(1.7); }
+    50%      { opacity: 0;    transform: scale(1.7); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7 · REDUCED MOTION — content appears instantly, nothing pulses
+   ══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        transition-delay: 0s !important;
+    }
+    .js .reveal, .js .stagger > * { opacity: 1 !important; transform: none !important; }
+    .card:hover, .card:hover .card__media img { transform: none; }
 }

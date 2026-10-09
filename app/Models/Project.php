@@ -10,17 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable('name', 'code', 'short_description', 'description', 'status', 'repository_url', 'demo_url', 'order', 'is_visible', 'is_featured')]
 class Project extends Model
 {
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    public function casts()
-    {
-        return [
-
-        ];
-    }
 
     public function technologies(): BelongsToMany
     {
